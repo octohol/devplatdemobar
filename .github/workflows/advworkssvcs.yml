@@ -1,0 +1,83 @@
+name: Build and deploy .NET Core application to Function App advworkssvcs
+on: workflow_dispatch
+
+permissions:
+      id-token: write
+      contents: read
+
+env:
+  AZURE_FUNCTIONAPP_NAME: advworkssvcs
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: .\func\published
+  DB_PACKAGE_PATH: .\advworksdb\bin\Release\advworksdb.dacpac
+  CONFIGURATION: Release
+  DOTNET_CORE_VERSION: 6.0.x
+  WORKING_DIRECTORY: .\advworkssvcs
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.1
+    - name: Build app for release
+      run: msbuild .\advworksdb\advworksdb.sqlproj
+      shell: cmd
+    - name: Publish DB
+      uses: actions/upload-artifact@v3
+      with:
+        name: db
+        path: ${{ env.DB_PACKAGE_PATH }}
+        
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
+    - name: Restore
+      run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
+    - name: Build
+      run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore
+    - name: Publish
+      run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}"
+    - name: Publish Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: functionapp
+        path: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+  deploy:
+    runs-on: windows-latest
+    needs: build
+    steps:
+    - name: Download Function artifact from build job
+      uses: actions/download-artifact@v3
+      with:
+        name: functionapp
+        path: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+        
+    - name: Download DB artifact from build job
+      uses: actions/download-artifact@v3
+      with:
+        name: db
+        path: 'dacpac'
+     
+    - name: List Files
+      shell: pwsh
+      run: ls -R
+  
+    - uses: azure/sql-action@v2.2
+      with:        
+        connection-string: ${{ secrets.AZURE_SQL_CONNECTION_STRING_AT }}
+        path: 'dacpac/advworksdb.dacpac'
+        action: 'publish'
+    
+    - name: 'Az CLI Login via OIDC'
+      uses: azure/login@v1
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID_AT }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID_AT }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID_AT }}
+        
+    - name: Deploy to Azure Function App
+      uses: Azure/functions-action@v1
+      with:
+        app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
+        package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}

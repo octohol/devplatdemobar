@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DataComparison>
+  <Version>10</Version>
+  <ConnectionProperties1>
+    <ConnectionString>Data Source=tcp:octobrian-wus3-sqlsvr.database.windows.net,1433;Initial Catalog=advworksprod;Persist Security Info=False;User ID=brianrandell@microsoft.com;Pooling=False;Multiple Active Result Sets=False;Connect Timeout=60;Encrypt=True;Trust Server Certificate=False;Authentication=ActiveDirectoryInteractive;Command Timeout=0</ConnectionString>
+    <FullDisplayName>tcp:octobrian-wus3-sqlsvr.database.windows.net,1433.advworksprod (brianrandell@microsoft.com)</FullDisplayName>
+  </ConnectionProperties1>
+  <ConnectionProperties2>
+    <ConnectionString>Data Source=tcp:octobrian-dev-env1-sqlsvr-wus3.database.windows.net,1433;Initial Catalog=advworksdev;Persist Security Info=False;User ID=brianrandell@microsoft.com;Pooling=False;Multiple Active Result Sets=False;Connect Timeout=60;Encrypt=True;Trust Server Certificate=False;Authentication=ActiveDirectoryInteractive;Command Timeout=0</ConnectionString>
+    <FullDisplayName>tcp:octobrian-dev-env1-sqlsvr-wus3.database.windows.net,1433.advworksdev (brianrandell@microsoft.com)</FullDisplayName>
+  </ConnectionProperties2>
+  <SessionSettings>Default</SessionSettings>
+</DataComparison>
