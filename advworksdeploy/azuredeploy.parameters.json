@@ -22,9 +22,6 @@
     },
     "databaseName": {
       "value": "advworksdbdev"
-    },
-    "administratorLoginPassword": {
-      "value": "P2ssw0rd@2023ss"
     }
   }
 }

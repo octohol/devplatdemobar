@@ -1,0 +1,45 @@
+# yaml-language-server: $schema=https://github.com/Azure/deployment-environments/releases/download/2022-11-11-preview/manifest.schema.json
+name: FunctionApp
+version: 1.0.0
+summary: Azure Function App plus sql dATABASE  Environment
+description: Deploys an Azure Function App, Storage Account, and Application Insights
+runner: ARM
+templatePath: azuredeploy.json
+
+parameters:
+  - id: "location"
+    name: "location"
+    description: "Location to deploy the environment resources"
+    default: "[resourceGroup().location]"
+    type: "string"
+    required: false
+  - id: functionAppName
+    name: "Function App Name"
+    description: 'Name of the Function App.'
+    type: string
+    required: true
+  - id: sqlServerName
+    name: "SQL Server Name"
+    description: 'Name of the SQL Server.'
+    type: string
+    required: true
+  - id: databaseName
+    name: "SQL Server Database Name"
+    description: 'Name of the SQL Server Database.'
+    type: string
+    required: true
+  - id: hostingPlanName
+    name: "Hosting Plan Name"
+    description: 'Name of the Hosting Plan.'
+    type: string
+    required: true
+  - id: applicationInsightsName
+    name: "Application Insights Name"
+    description: 'Name of the Application Insights instance.'
+    type: string
+    required: true
+  - id: logAnalyticsWorkspaceName
+    name: "Log Analytics WorkspaceName Name"
+    description: 'Name of the Log Analytics WorkspaceName.'
+    type: string
+    required: true
