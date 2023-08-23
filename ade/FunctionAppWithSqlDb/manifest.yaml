@@ -28,6 +28,11 @@ parameters:
     description: 'Name of the SQL Server Database.'
     type: string
     required: true
+  - id: administratorLoginPassword
+    name: "SQL Server Database Admin Password"
+    description: 'Password for SQL Server Database Admin.'
+    type: securestring
+    required: true
   - id: hostingPlanName
     name: "Hosting Plan Name"
     description: 'Name of the Hosting Plan.'
