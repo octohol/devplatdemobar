@@ -31,7 +31,7 @@ parameters:
   - id: administratorLoginPassword
     name: "SQL Server Database Admin Password"
     description: 'Password for SQL Server Database Admin.'
-    type: securestring
+    type: string
     required: true
   - id: hostingPlanName
     name: "Hosting Plan Name"
