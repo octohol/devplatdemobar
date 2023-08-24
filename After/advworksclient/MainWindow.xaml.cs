@@ -1,19 +1,9 @@
 ﻿using advworksdto;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
+using System.Security;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace advworksclient
 {
@@ -29,16 +19,22 @@ namespace advworksclient
 
         private async void btnLogin_ClickAsync(object sender, RoutedEventArgs e)
         {
-            btnLogin.IsEnabled = false;
-            txtUserName.IsEnabled = false;
-            txtPassword.IsEnabled = false;
-            lblStatus.Visibility = Visibility.Visible;
-
-            bool r = await LoadData();
-
-            if (r)
+            UpdateControls(false);
+            if (await ValidateLogin(txtUserName.Text, txtPassword.SecurePassword))
             {
-                this.Close();
+                if (await LoadData())
+                {
+                    this.Close();
+                }
+                else
+                {
+                    UpdateControls(true);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Invalid login.");
+                UpdateControls(true);
             }
         }
 
@@ -89,6 +85,33 @@ namespace advworksclient
 
 
             
+        }
+
+        private async Task<bool> ValidateLogin(string name, SecureString password)
+        {
+            // validate login using MSAL and Azure AD
+            // see https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-v2-wpf
+
+            // do a Thread.sleep to simulate the login process for 500 milliseconds
+            await Task.Delay(500);
+
+            if (!string.IsNullOrEmpty(name) && password.Length > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+
+        private void UpdateControls(bool state)
+        {
+            btnLogin.IsEnabled = state;
+            txtUserName.IsEnabled = state;
+            txtPassword.IsEnabled = state;
+            lblStatus.Visibility = state ? Visibility.Hidden : Visibility.Visible;
         }
 
     }

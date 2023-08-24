@@ -112,5 +112,11 @@
       <Name>advworksdto</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Lock.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="UserDefinedDataType.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

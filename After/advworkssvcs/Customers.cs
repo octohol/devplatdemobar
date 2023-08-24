@@ -1,17 +1,13 @@
-using System;
-using System.IO;
-using System.Threading.Tasks;
+using advworksdto;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
-using advworksdto;
-using Microsoft.IdentityModel.Abstractions;
-using Microsoft.ApplicationInsights;
+using System.Threading.Tasks;
 
 namespace advworkssvcs
 {
@@ -28,7 +24,7 @@ namespace advworkssvcs
                 // access SQL Database
                 // string connectionString = "Server=tcp:octobrian-wus3-sqlsvr.database.windows.net,1433;Initial Catalog=advworksprod;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;Authentication=\"Active Directory Default\";";
                 string connectionString = "Server=tcp:octobrian-dev-env1-sqlsvr-wus3.database.windows.net,1433;Initial Catalog=advworksdev;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;Authentication=\"Active Directory Default\";";
-                if (System.Diagnostics.Debugger.IsAttached)
+                if (!System.Diagnostics.Debugger.IsAttached)
                 {
                     connectionString = "Server=tcp:octobrian-dev-env1-sqlsvr-wus3.database.windows.net,1433;Authentication=Active Directory Managed Identity;Database=advworksdev";
                 }

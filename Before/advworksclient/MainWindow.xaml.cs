@@ -3,19 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
+using System.Security;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace advworksclient
 {
@@ -31,16 +21,22 @@ namespace advworksclient
 
         private async void btnLogin_ClickAsync(object sender, RoutedEventArgs e)
         {
-            btnLogin.IsEnabled = false;
-            txtUserName.IsEnabled = false;
-            txtPassword.IsEnabled = false;
-            lblStatus.Visibility = Visibility.Visible;
-
-            bool r = await LoadData();
-
-            if (r)
+            UpdateControls(false);
+            if (await ValidateLogin(txtUserName.Text, txtPassword.SecurePassword))
             {
-                this.Close();
+                if (await LoadData())
+                {
+                    this.Close();
+                }
+                else
+                {
+                    UpdateControls(true);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Invalid login.");
+                UpdateControls(true);
             }
         }
 
@@ -48,14 +44,14 @@ namespace advworksclient
         {
             List<Customer> customers = new List<Customer>();
             // Open a SqlConnection to (localdb)\MSQLLocalDB using the connection string in the App.config
-            // The database name is AdvWorksDemoPrep
+            // and download the customer data from the database AdvWorksDemoPrep
             string conString = ConfigurationManager.ConnectionStrings["AdvWorksDemoPrep"].ConnectionString;
 
             try
             {
                 using (SqlConnection con = new SqlConnection(conString))
                 {
-                    string sql = @"SELECT CustomerID, FirstName, LastName, EmailAddress, Phone FROM SalesLT.Customer";
+                    string sql = @"SELECT TOP 100 CustomerID, FirstName, LastName, EmailAddress, Phone FROM SalesLT.Customer";
                     using (SqlCommand cmd = new SqlCommand(sql, con))
                     {
                         con.Open();
@@ -96,6 +92,33 @@ namespace advworksclient
                 return false;
 
             }
+        }
+
+        private async Task<bool> ValidateLogin(string name, SecureString password)
+        {
+            // validate login using MSAL and Azure AD
+            // see https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-v2-wpf
+
+            // do a Thread.sleep to simulate the login process for 500 milliseconds
+            await Task.Delay(500);
+
+            if (!string.IsNullOrEmpty(name) && password.Length > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+            
+        }
+
+        private void UpdateControls(bool state)
+        {
+            btnLogin.IsEnabled = state;
+            txtUserName.IsEnabled = state;
+            txtPassword.IsEnabled = state;
+            lblStatus.Visibility = state ? Visibility.Hidden : Visibility.Visible;
         }
     }
 }
