@@ -16,16 +16,19 @@ parameters:
   - id: functionAppName
     name: "Function App Name"
     description: 'Name of the Function App.'
+    default: "devdemofunc"
     type: string
     required: true
   - id: sqlServerName
     name: "SQL Server Name"
     description: 'Name of the SQL Server.'
+    default: "devdemosqlsvr"
     type: string
     required: true
   - id: databaseName
     name: "SQL Server Database Name"
     description: 'Name of the SQL Server Database.'
+    default: "devdemosqldb"
     type: string
     required: true
   - id: administratorLoginPassword
@@ -36,15 +39,18 @@ parameters:
   - id: hostingPlanName
     name: "Hosting Plan Name"
     description: 'Name of the Hosting Plan.'
+    default: "devdemoplan"
     type: string
     required: true
   - id: applicationInsightsName
     name: "Application Insights Name"
     description: 'Name of the Application Insights instance.'
+    default: "devdemoai"
     type: string
     required: true
   - id: logAnalyticsWorkspaceName
     name: "Log Analytics WorkspaceName Name"
     description: 'Name of the Log Analytics WorkspaceName.'
+    default: "devdemolaw"
     type: string
     required: true
